@@ -1,12 +1,16 @@
-FROM python:3.10-slim
+FROM nvidia/cuda:12.1.0-base-ubuntu22.04 
 
-WORKDIR /
+RUN apt-get update -y \
+    && apt-get install -y python3-pip
 
-# Install dependencies
-RUN pip install --no-cache-dir runpod
+RUN ldconfig /usr/local/cuda-12.1/compat/
 
-# Copy your handler file
-COPY rp_handler.py /
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Start the container
-CMD ["python3", "-u", "rp_handler.py"]
+# Copy application code
+COPY app.py .
+
+# Start the handler
+CMD ["python3", "app.py"]
