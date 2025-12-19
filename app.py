@@ -1,50 +1,31 @@
-import os
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+# Create a Python virtual environment
+import runpod
+import time  
 
-# Create FastAPI app
-app = FastAPI()
+def handler(event):
+#   This function processes incoming requests to your Serverless endpoint.
+#
+#    Args:
+#        event (dict): Contains the input data and request metadata
+#       
+#    Returns:
+#       Any: The result to be returned to the client
+    
+    # Extract input data
+    print(f"Worker Start")
+    input = event['input']
+    
+    prompt = input.get('prompt')  
+    seconds = input.get('seconds', 0)  
 
-# Define request models
-class GenerationRequest(BaseModel):
-    prompt: str
-    max_tokens: int = 100
-    temperature: float = 0.7
+    print(f"Received prompt: {prompt}")
+    print(f"Sleeping for {seconds} seconds...")
+    
+    # You can replace this sleep call with your own Python code
+    time.sleep(seconds)  
+    
+    return prompt 
 
-class GenerationResponse(BaseModel):
-    generated_text: str
-
-
-# Global variable to track requests
-request_count = 0
-
-# Health check endpoint; required for Runpod to monitor worker health
-@app.get("/ping")
-async def health_check():
-    return {"status": "healthy"}
-
-# Our custom generation endpoint
-@app.post("/generate", response_model=GenerationResponse)
-async def generate(request: GenerationRequest):
-    global request_count
-    request_count += 1
-
-    # A simple mock implementation; we'll replace this with an actual model later
-    generated_text = f"Response to: {request.prompt} (request #{request_count})"
-
-    return {"generated_text": generated_text}
-
-# A simple endpoint to show request stats
-@app.get("/stats")
-async def stats():
-    return {"total_requests": request_count}
-
-# Run the app when the script is executed
-if __name__ == "__main__":
-    import uvicorn
-
-    port = int(os.getenv("PORT", 80))
-    print(f"Starting FastAPI server on port {port}")
-
-    # Start the server
-    uvicorn.run(app, host="0.0.0.0", port=port)
+# Start the Serverless function when the script is run
+if __name__ == '__main__':
+    runpod.serverless.start({'handler': handler })

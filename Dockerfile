@@ -7,8 +7,9 @@ RUN ln -sf $(which python3.11) /usr/local/bin/python && \
 # Install dependencies
 COPY requirements.txt /requirements.txt
 RUN uv pip install --upgrade -r /requirements.txt --no-cache-dir --system
-# Copy application code
-COPY app.py .
 
-# Start the app
-CMD python -u /app.py
+# Copy application code
+COPY app.py /
+
+# Start the container
+CMD ["python3", "-u", "app.py"]
