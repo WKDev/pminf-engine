@@ -2,6 +2,7 @@ import os
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
+
 # Create FastAPI app
 app = FastAPI()
 
@@ -40,7 +41,9 @@ async def stats():
 
 # Run the app when the script is executed
 if __name__ == "__main__":
+    import logging
     import uvicorn
+    logger = logging.getLogger(__name__)
 
     port = int(os.getenv("PORT", 80))
     logger.info(f"Starting vLLM server on port {port}")

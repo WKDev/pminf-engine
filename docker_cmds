@@ -1,0 +1,16 @@
+docker build --platform linux/amd64 --tag chanhyeokson/pminf-engine .
+docker push chanhyeokson/pminf-engine:latest
+
+
+// localtest
+docker run -it -p 80:80 chanhyeokson/pminf-engine
+
+curl -X GET "http://localhost/ping" \       
+    -H 'Authorization: Bearer ' \
+    -H "Content-Type: application/json"
+
+// deploy test
+
+curl -X GET "https://.api.runpod.ai/ping" \
+    -H 'Authorization: Bearer ' \
+    -H "Content-Type: application/json"
