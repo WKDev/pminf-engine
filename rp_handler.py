@@ -1,4 +1,3 @@
-# Create a Python virtual environment
 import runpod
 import time  
 
